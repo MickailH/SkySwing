@@ -5,11 +5,18 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
-
-    public TrajectoryController trajectory;
-
-    public LineRenderer grapple;
     public Rigidbody2D rb;
+    public TrajectoryController trajectory;
+    //public SpringJoint2D joint;
+    //public HingeJoint2D joint;
+    public AnchoredJoint2D joint;
+
+    public LineRenderer grappleLine;
+    public Vector2 hookPos;
+    private Vector2 hookDir;
+    private float hookThrowDist;
+    public bool retracting;
+    public bool boosting;
     public SwingState state; 
     void Start()
     {
@@ -22,26 +29,72 @@ public class PlayerController : MonoBehaviour
     {
         trajectory.PhysicalPlot(rb.position, rb.velocity);
 
+
         switch (state)
         {
+
+            
             case SwingState.Flying:
-            if(Input.GetMouseButtonDown(0)) Hook(getMousePos());      
+                if(Input.GetMouseButtonDown(0)){
+                    // hookDir = (getMousePos()-rb.position).normalized;
+                    // Hook();
+                    hookPos = getMousePos();
+                    AttachHook(hookPos);
+                    state = SwingState.Hooking;
+                }     
             break;
 
-            case SwingState.Hooking:            
+            case SwingState.Hooking:
+                grappleLine.SetPosition(0, rb.position);   
+                if(Input.GetMouseButtonUp(0)){
+                    state = SwingState.Swinging;
+                }
             break;
 
-            case SwingState.Retracting:           
+            case SwingState.Swinging:
+                grappleLine.SetPosition(0, rb.position);
+                if(Input.GetMouseButtonDown(0)) retracting = true;
+
+                if(Input.GetMouseButtonUp(0)){
+                    state = SwingState.Flying;
+                    retracting = false;
+                    DeattachHook();
+                }
+
             break;
             
             default:
             break;
         }
 
+        if(Input.GetMouseButtonDown(1)){
+            boosting = true;
+        }
+
+        // if(retracting) joint.
     }
 
-    public void Hook(Vector2 hookPos){
-        
+    public void Hook(){
+        // Vector2 hookPos = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist).point;
+        RaycastHit2D hit = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist);
+        if(hit){
+            state = SwingState.Hooking;
+            hookPos = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist).point;
+            grappleLine.enabled = true;
+            grappleLine.SetPosition(1, hookPos);
+        }
+    }
+
+    public void AttachHook(Vector2 globalPos){
+        joint.enabled = true;
+        joint.connectedAnchor = globalPos;// - rb.position;
+        grappleLine.enabled = true;
+        grappleLine.SetPosition(1, globalPos);
+    }
+
+    public void DeattachHook(){
+        joint.enabled = false;
+        grappleLine.enabled = false;
     }
 
     public Vector2 getMousePos()
@@ -58,5 +111,5 @@ public class PlayerController : MonoBehaviour
 public enum SwingState {
     Flying,
     Hooking,
-    Retracting,
+    Swinging,
 }
