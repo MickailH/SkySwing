@@ -144,6 +144,7 @@ MonoBehaviour:
   grappleLine: {fileID: 8974186289906233384}
   hookPos: {x: 0, y: 0}
   retracting: 0
+  retractionSpeed: 3
   boosting: 0
   state: 0
 --- !u!120 &3021943727317739003
@@ -285,8 +286,8 @@ SpringJoint2D:
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 1
   m_Distance: 0.005
-  m_DampingRatio: 0
-  m_Frequency: 1
+  m_DampingRatio: 1
+  m_Frequency: 0
 --- !u!1 &2228424064907009152
 GameObject:
   m_ObjectHideFlags: 0

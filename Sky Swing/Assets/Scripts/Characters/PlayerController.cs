@@ -7,15 +7,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     public Rigidbody2D rb;
     public TrajectoryController trajectory;
-    //public SpringJoint2D joint;
-    //public HingeJoint2D joint;
-    public AnchoredJoint2D joint;
+    public SpringJoint2D joint;
 
     public LineRenderer grappleLine;
     public Vector2 hookPos;
     private Vector2 hookDir;
     private float hookThrowDist;
     public bool retracting;
+    public float retractionSpeed;
     public bool boosting;
     public SwingState state; 
     void Start()
@@ -29,11 +28,8 @@ public class PlayerController : MonoBehaviour
     {
         trajectory.PhysicalPlot(rb.position, rb.velocity);
 
-
         switch (state)
         {
-
-            
             case SwingState.Flying:
                 if(Input.GetMouseButtonDown(0)){
                     // hookDir = (getMousePos()-rb.position).normalized;
@@ -67,11 +63,13 @@ public class PlayerController : MonoBehaviour
             break;
         }
 
-        if(Input.GetMouseButtonDown(1)){
-            boosting = true;
-        }
+        boosting = Input.GetMouseButton(1);
 
-        // if(retracting) joint.
+        // if(Input.GetMouseButton(1)){
+        //     boosting = true;
+        // }
+
+        if(retracting) joint.distance -= retractionSpeed * Time.deltaTime;
     }
 
     public void Hook(){
@@ -111,5 +109,5 @@ public class PlayerController : MonoBehaviour
 public enum SwingState {
     Flying,
     Hooking,
-    Swinging,
+    Swinging
 }
