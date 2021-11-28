@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public bool retracting;
     public float retractionSpeed;
     public bool boosting;
+    public float boostVel;
     public SwingState state; 
     void Start()
     {
@@ -72,6 +73,10 @@ public class PlayerController : MonoBehaviour
         if(retracting) joint.distance -= retractionSpeed * Time.deltaTime;
     }
 
+    void FixedUpdate(){
+        if(boosting) rb.velocity += rb.velocity.normalized * boostVel * Time.deltaTime;
+    }
+
     public void Hook(){
         // Vector2 hookPos = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist).point;
         RaycastHit2D hit = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist);
@@ -84,10 +89,14 @@ public class PlayerController : MonoBehaviour
     }
 
     public void AttachHook(Vector2 globalPos){
+        //joint.anchor = rb.position;
+        joint.connectedAnchor = globalPos;
         joint.enabled = true;
-        joint.connectedAnchor = globalPos;// - rb.position;
-        grappleLine.enabled = true;
+
+        grappleLine.SetPosition(0, rb.position);
         grappleLine.SetPosition(1, globalPos);
+        grappleLine.enabled = true;
+
     }
 
     public void DeattachHook(){
