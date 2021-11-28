@@ -5,11 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class TrajectoryController : MonoBehaviour
 {
-    // public bool project;
+
     [SerializeField] private Rigidbody2D projectile;
-    [SerializeField] private Transform _obstaclesParent; //parent of all obstacles that need to be simulated for collisions etc.
     [SerializeField] private LineRenderer _line;
+    [SerializeField] private Transform _obstaclesParent; //parent of all obstacles that need to be simulated for collisions etc.
+    public bool virtualSim;
     [SerializeField] private int _maxPhysicsFrameIterations;
+    [SerializeField] private int _maxVirtualFrameIterations;
 
 
     private Scene _simulationScene;
@@ -22,24 +24,37 @@ public class TrajectoryController : MonoBehaviour
     void Start()
     {
         projectile = GetComponent<Rigidbody2D>();
-        _obstaclesParent = GameObject.Find("Obstacles").transform;
-        Create2DPhysicsScene();
-        ghostProj = Instantiate(projectile).GetComponent<Rigidbody2D>();
-        SceneManager.MoveGameObjectToScene(ghostProj.gameObject, _simulationScene);
 
-        Destroy(ghostProj.GetComponent<Renderer>());
-        Destroy(ghostProj.GetComponent<LineRenderer>());
-        Destroy(ghostProj.GetComponent<TrajectoryController>());
-        Destroy(ghostProj.GetComponent<PlayerController>());
-
-        ghostProj.gameObject.SetActive(false);
+        if(!virtualSim)
+        {
+            InitPhysicalPlot();
+        }
     }
 
+    public void UpdatePlot(Vector2 pos, Vector2 velocity){
+        if(virtualSim) VirtualPlot(pos, velocity);
+        else PhysicalPlot(pos, velocity);
+    }
 
-    void Update()
+    public void VirtualPlot(Vector2 pos, Vector2 velocity)
     {
-        // PhysicalPlot(projectile, projectile.position, projectile.velocity);
+        _line.positionCount = _maxVirtualFrameIterations;
+
+        float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations;
+        Vector2 gravityAccel = Physics2D.gravity * projectile.gravityScale * timestep * timestep;
+        float drag = 1f - timestep * projectile.drag;
+        Vector2 moveStep = velocity * timestep;
+    
+        for (int i = 0; i < _maxVirtualFrameIterations; i++)
+        {
+            moveStep += gravityAccel;
+            moveStep *= drag;
+            pos += moveStep;
+            _line.SetPosition(i, pos);
+            //results[i] = pos;
+        }
     }
+
 
     public void PhysicalPlot(Vector3 pos, Vector3 velocity){
         foreach (var item in _spawnedObjects) {
@@ -59,7 +74,24 @@ public class TrajectoryController : MonoBehaviour
         ghostProj.gameObject.SetActive(false);
     }
 
-    private void Create2DPhysicsScene() {
+
+    public void InitPhysicalPlot()
+    {
+        _obstaclesParent = GameObject.Find("Obstacles").transform;
+        Create2DPhysicsScene();
+        ghostProj = Instantiate(projectile).GetComponent<Rigidbody2D>();
+        SceneManager.MoveGameObjectToScene(ghostProj.gameObject, _simulationScene);
+
+        Destroy(ghostProj.GetComponent<Renderer>());
+        Destroy(ghostProj.GetComponent<LineRenderer>());
+        Destroy(ghostProj.GetComponent<TrajectoryController>());
+        Destroy(ghostProj.GetComponent<PlayerController>());
+
+        ghostProj.gameObject.SetActive(false);
+    }
+
+
+    public void Create2DPhysicsScene() {
         _simulationScene = SceneManager.CreateScene("Trajectory Simulation", new CreateSceneParameters(LocalPhysicsMode.Physics2D));
         _physicsScene2D = _simulationScene.GetPhysicsScene2D();
 

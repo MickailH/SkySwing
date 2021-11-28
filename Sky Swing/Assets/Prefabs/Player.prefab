@@ -265,9 +265,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectile: {fileID: 0}
-  _obstaclesParent: {fileID: 0}
   _line: {fileID: 3021943727317739003}
+  _obstaclesParent: {fileID: 0}
+  virtualSim: 1
   _maxPhysicsFrameIterations: 500
+  _maxVirtualFrameIterations: 10000
 --- !u!231 &271808763
 SpringJoint2D:
   m_ObjectHideFlags: 0

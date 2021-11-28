@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        trajectory.PhysicalPlot(rb.position, rb.velocity);
+        trajectory.UpdatePlot(rb.position, rb.velocity);
 
         switch (state)
         {
