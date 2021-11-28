@@ -4,40 +4,40 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public TileManager tileManager;
     public Rigidbody2D playerRB;
-    public GameObject hor;
-    public GameObject ver;
+    public Transform playerSpawnLocation;
 
-
+    public Transform spawnLineSpawn;
+    public Transform wallSpawn;
 
     public Transform spawnLine;
     public Transform wall;
 
-    public Transform tiles;
-    public int tilePointer;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
-        // for (int i = 0; i < 10; i++)
-        // {
-        //     SpawnTile();
-        // }
+        tileManager.InitLevel();
     }
 
     public void ShiftLevel(){
-        print("gm shift level");
         Vector3 shiftAmount = Vector3.right * 50f;
         spawnLine.position += shiftAmount;
         wall.position += shiftAmount;
-        SpawnTile();
+        tileManager.AddTile();
     }
 
-    public void SpawnTile(){
-        int offset = 2;
-        Instantiate(tilePointer%2 == 0 ? hor : ver, new Vector2(50 * (tilePointer-offset), 75f), Quaternion.identity, tiles);
-        tilePointer++;
+    public void ResetLevel(){
+        foreach (Transform tile in tileManager.tiles)
+        {
+            Destroy(tile.gameObject);
+        }
+        playerRB.position = playerSpawnLocation.position;
+        playerRB.velocity = Vector2.zero;
+        spawnLine.position = spawnLineSpawn.position;
+        wall.position = wallSpawn.position;
+        tileManager.InitLevel();
     }
-
 }
