@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public GameObject hor;
     public GameObject ver;
 
+
+
     public Transform spawnLine;
     public Transform wall;
 
@@ -17,10 +19,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < 10; i++)
-        {
-            SpawnTile();
-        }
+        
+        // for (int i = 0; i < 10; i++)
+        // {
+        //     SpawnTile();
+        // }
     }
 
     public void ShiftLevel(){
@@ -36,4 +39,5 @@ public class GameManager : MonoBehaviour
         Instantiate(tilePointer%2 == 0 ? hor : ver, new Vector2(50 * (tilePointer-offset), 75f), Quaternion.identity, tiles);
         tilePointer++;
     }
+
 }

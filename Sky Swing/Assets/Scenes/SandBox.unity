@@ -554,6 +554,7 @@ GameObject:
   m_Component:
   - component: {fileID: 747092649}
   - component: {fileID: 747092650}
+  - component: {fileID: 747092651}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -594,6 +595,20 @@ MonoBehaviour:
   wall: {fileID: 1936267078}
   tiles: {fileID: 678223585}
   tilePointer: 0
+--- !u!114 &747092651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 747092648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdf34dd7951b4674fab2790d41ae980b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brick: {fileID: 6416671206786275324, guid: 109698712457922418a1dd9516fe4798, type: 3}
+  window: {fileID: 5527004424277036834, guid: 7eef5733e484f2940b1bbf60eaf343e2, type: 3}
 --- !u!1 &1013791524
 GameObject:
   m_ObjectHideFlags: 0
