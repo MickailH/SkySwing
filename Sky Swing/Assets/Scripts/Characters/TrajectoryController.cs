@@ -7,7 +7,7 @@ public class TrajectoryController : MonoBehaviour
 {
 
     [SerializeField] private Rigidbody2D projectile;
-    [SerializeField] private LineRenderer _line;
+    [SerializeField] private LineRenderer trajectorLine;
     [SerializeField] private Transform _obstaclesParent; //parent of all obstacles that need to be simulated for collisions etc.
     public bool virtualSim;
     [SerializeField] private int _maxPhysicsFrameIterations;
@@ -38,7 +38,7 @@ public class TrajectoryController : MonoBehaviour
 
     public void VirtualPlot(Vector2 pos, Vector2 velocity)
     {
-        _line.positionCount = _maxVirtualFrameIterations;
+        trajectorLine.positionCount = _maxVirtualFrameIterations;
 
         float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations;
         Vector2 gravityAccel = Physics2D.gravity * projectile.gravityScale * timestep * timestep;
@@ -50,7 +50,7 @@ public class TrajectoryController : MonoBehaviour
             moveStep += gravityAccel;
             moveStep *= drag;
             pos += moveStep;
-            _line.SetPosition(i, pos);
+            trajectorLine.SetPosition(i, pos);
             //results[i] = pos;
         }
     }
@@ -66,10 +66,10 @@ public class TrajectoryController : MonoBehaviour
         ghostProj.transform.position = pos;
         ghostProj.velocity = velocity;
 
-        _line.positionCount = _maxPhysicsFrameIterations;
+        trajectorLine.positionCount = _maxPhysicsFrameIterations;
         for (var i = 0; i < _maxPhysicsFrameIterations; i++) {
             _physicsScene2D.Simulate(Time.fixedDeltaTime);
-            _line.SetPosition(i, ghostProj.transform.position);
+            trajectorLine.SetPosition(i, ghostProj.transform.position);
         }
         ghostProj.gameObject.SetActive(false);
     }
