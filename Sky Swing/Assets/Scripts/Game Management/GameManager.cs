@@ -5,14 +5,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public TileManager tileManager;
-    public Rigidbody2D playerRB;
+    public GameObject playerPrefab;
     public Transform playerSpawnLocation;
-
     public Transform spawnLineSpawn;
     public Transform wallSpawn;
-
     public Transform spawnLine;
     public Transform wall;
+    public Rigidbody2D playerRB;
 
 
 
@@ -30,14 +29,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void ResetLevel(){
-        foreach (Transform tile in tileManager.tiles)
-        {
-            Destroy(tile.gameObject);
-        }
-        playerRB.position = playerSpawnLocation.position;
-        playerRB.velocity = Vector2.zero;
+        // Destroy(playerRB.gameObject);
+        // playerRB = Instantiate(playerPrefab, playerSpawnLocation.position, Quaternion.identity).GetComponent<Rigidbody2D>();
+        tileManager.InitLevel();
+        playerRB.GetComponent<PlayerController>().ResetPlayer(playerSpawnLocation.position);
         spawnLine.position = spawnLineSpawn.position;
         wall.position = wallSpawn.position;
-        tileManager.InitLevel();
     }
 }

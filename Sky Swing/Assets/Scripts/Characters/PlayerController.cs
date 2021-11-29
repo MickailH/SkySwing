@@ -104,6 +104,12 @@ public class PlayerController : MonoBehaviour
         grappleLine.enabled = false;
     }
 
+    public void ResetPlayer(Vector2 resetPos){
+        DeattachHook();
+        rb.velocity = Vector2.zero;
+        rb.position = resetPos;
+    }
+
     public Vector2 getMousePos()
     {
         Vector3 mousePos = Input.mousePosition;
