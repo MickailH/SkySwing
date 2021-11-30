@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     public void ResetLevel(){
         // Destroy(playerRB.gameObject);
         // playerRB = Instantiate(playerPrefab, playerSpawnLocation.position, Quaternion.identity).GetComponent<Rigidbody2D>();
-        tileManager.InitLevel();
+        tileManager.ResetTiles();
         playerRB.GetComponent<PlayerController>().ResetPlayer(playerSpawnLocation.position);
         spawnLine.position = spawnLineSpawn.position;
         wall.position = wallSpawn.position;
