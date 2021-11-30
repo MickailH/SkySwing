@@ -38,13 +38,12 @@ public class TrajectoryController : MonoBehaviour
 
     public void VirtualPlot(Vector2 pos, Vector2 velocity)
     {
-        trajectoryLine.positionCount = _maxVirtualFrameIterations;
-
         float timestep = Time.fixedDeltaTime / Physics2D.velocityIterations;
         Vector2 gravityAccel = Physics2D.gravity * projectile.gravityScale * timestep * timestep;
         float drag = 1f - timestep * projectile.drag;
         Vector2 moveStep = velocity * timestep;
-    
+
+        trajectoryLine.positionCount = _maxVirtualFrameIterations;
         for (int i = 0; i < _maxVirtualFrameIterations; i++)
         {
             moveStep += gravityAccel;

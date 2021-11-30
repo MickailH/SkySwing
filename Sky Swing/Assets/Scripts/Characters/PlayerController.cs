@@ -10,17 +10,19 @@ public class PlayerController : MonoBehaviour
     public SpringJoint2D joint;
 
     public LineRenderer grappleLine;
-    public Vector2 hookPos;
+    private Vector2 hookPos;
     private Vector2 hookDir;
     private float hookThrowDist;
     public bool retracting;
     public float retractionSpeed;
     public bool boosting;
-    public float boostVel;
+    public float boostAccel;
+    public float boostAmount;
+    public float boostUseRate;
     public SwingState state; 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        // rb = GetComponent<Rigidbody2D>();
         trajectory = GetComponent<TrajectoryController>();
     }
 
@@ -37,11 +39,11 @@ public class PlayerController : MonoBehaviour
                     // Hook();
                     hookPos = getMousePos();
                     AttachHook(hookPos);
-                    state = SwingState.Hooking;
+                    state = SwingState.Grappling;
                 }     
             break;
 
-            case SwingState.Hooking:
+            case SwingState.Grappling:
                 grappleLine.SetPosition(0, rb.position);   
                 if(Input.GetMouseButtonUp(0)){
                     state = SwingState.Swinging;
@@ -57,31 +59,35 @@ public class PlayerController : MonoBehaviour
                     retracting = false;
                     DeattachHook();
                 }
-
             break;
             
             default:
             break;
         }
 
-        boosting = Input.GetMouseButton(1);
 
-        // if(Input.GetMouseButton(1)){
-        //     boosting = true;
-        // }
+        if(Input.GetMouseButton(1) && boostAmount > 0){
+            boostAmount -= boostUseRate * Time.deltaTime;
+            boosting = true;
+        }
+        else boosting = false;
+        
 
         if(retracting) joint.distance -= retractionSpeed * Time.deltaTime;
     }
 
     void FixedUpdate(){
-        if(boosting) rb.velocity += rb.velocity.normalized * boostVel * Time.deltaTime;
+        if(boosting) rb.velocity += rb.velocity.normalized * boostAccel * Time.deltaTime;
+    }
+
+    public void ChangeBoost(float boostChange){
+        boostAmount = Mathf.Clamp(boostAmount + boostChange, 0, 100);
     }
 
     public void Hook(){
-        // Vector2 hookPos = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist).point;
         RaycastHit2D hit = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist);
         if(hit){
-            state = SwingState.Hooking;
+            state = SwingState.Grappling;
             hookPos = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist).point;
             grappleLine.enabled = true;
             grappleLine.SetPosition(1, hookPos);
@@ -89,14 +95,12 @@ public class PlayerController : MonoBehaviour
     }
 
     public void AttachHook(Vector2 globalPos){
-        //joint.anchor = rb.position;
         joint.connectedAnchor = globalPos;
         joint.enabled = true;
 
         grappleLine.SetPosition(0, rb.position);
         grappleLine.SetPosition(1, globalPos);
         grappleLine.enabled = true;
-
     }
 
     public void DeattachHook(){
@@ -123,6 +127,6 @@ public class PlayerController : MonoBehaviour
 
 public enum SwingState {
     Flying,
-    Hooking,
+    Grappling,
     Swinging
 }

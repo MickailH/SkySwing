@@ -6,6 +6,7 @@ public class TileManager : MonoBehaviour
 {
     public GameObject brick;
     public GameObject window;
+    public GameObject boostPrefab;
     public GameObject background;
     public GameObject floor;
     public Transform tiles;
@@ -63,7 +64,9 @@ public class TileManager : MonoBehaviour
         // if(Random.Range(0,100) < windowChance){
         if(tilePointer % 2 == 0){
             float windLen = Random.Range(WinLenMin, WinLenMax);
-            Instantiate(window, new Vector2(50 * (tilePointer), buildpointer + buildDir * windLen / 2), Quaternion.identity, tileParent).transform.localScale = new Vector3(buildWidth, windLen, 1);
+            Vector2 WindowPos = new Vector2(50 * (tilePointer), buildpointer + buildDir * windLen / 2);
+            Instantiate(window, WindowPos, Quaternion.identity, tileParent).transform.localScale = new Vector3(buildWidth, windLen, 1);
+            Instantiate(boostPrefab, WindowPos, Quaternion.identity, tileParent);
             buildpointer += windLen * buildDir;
             
         //     float buildLen2 = Random.Range(brickLenMin2, brickLenMax2);

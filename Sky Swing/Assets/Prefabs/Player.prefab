@@ -77,7 +77,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_Sprite: {fileID: -9095717837082945937, guid: bd3cb4af8406d4436a2ae8c2aafe1f8d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -138,15 +138,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b0fc2cba0897248b9567b0f4c338b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
+  rb: {fileID: 2833758502469575479}
   trajectory: {fileID: 5906124500710234948}
   joint: {fileID: 271808763}
   grappleLine: {fileID: 8974186289906233384}
-  hookPos: {x: 0, y: 0}
   retracting: 0
   retractionSpeed: 10
   boosting: 0
-  boostVel: 10
+  boostAccel: 10
+  boostAmount: 100
+  boostUseRate: 10
   state: 0
 --- !u!120 &3021943727317739003
 LineRenderer:
@@ -266,7 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectile: {fileID: 0}
-  trajectorLine: {fileID: 3021943727317739003}
+  trajectoryLine: {fileID: 3021943727317739003}
   _obstaclesParent: {fileID: 0}
   virtualSim: 1
   _maxPhysicsFrameIterations: 500
@@ -290,7 +291,7 @@ SpringJoint2D:
   m_AutoConfigureDistance: 1
   m_Distance: 0.005
   m_DampingRatio: 0
-  m_Frequency: 1
+  m_Frequency: 0.8
 --- !u!1 &2228424064907009152
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +362,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
