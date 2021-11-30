@@ -295,6 +295,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!120 &271808756 stripped
+LineRenderer:
+  m_CorrespondingSourceObject: {fileID: 3021943727317739003, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
+  m_PrefabInstance: {fileID: 5133500228091173687}
+  m_PrefabAsset: {fileID: 0}
 --- !u!50 &271808759 stripped
 Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 2833758502469575479, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
@@ -1556,6 +1561,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5906124500710234948, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
+      propertyPath: trajectoryLine
+      value: 
+      objectReference: {fileID: 271808756}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
 --- !u!1001 &5196435371651404881
