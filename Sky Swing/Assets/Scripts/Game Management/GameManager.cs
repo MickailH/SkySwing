@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
         wall.position += shiftAmount;
         CameraConfiner.position += shiftAmount;
         tileManager.AddTile();
+        tileManager.DeleteOldTile();
     }
 
     public void ResetLevel(){

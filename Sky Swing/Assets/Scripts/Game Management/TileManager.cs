@@ -10,8 +10,6 @@ public class TileManager : MonoBehaviour
     public GameObject background;
     public GameObject floor;
     public Transform tiles;
-    public Transform floors;
-    public Transform backgrounds;
     public int tilePointer;
 
     public int windowChance;
@@ -39,17 +37,20 @@ public class TileManager : MonoBehaviour
         temp = (new GameObject(tilePointer.ToString())).transform;
         temp.SetParent(tiles);
         MakeBuilding(tilePointer, temp);
-        MakeBackground(tilePointer, backgrounds);
-        MakeFloor(tilePointer, floors);
+        MakeBackground(tilePointer, temp);
+        MakeFloor(tilePointer, temp);
         tilePointer++;
     }
 
     public void ResetTiles(){
         foreach (Transform tile in tiles)   Destroy(tile.gameObject);
-        foreach (Transform floor in floors)   Destroy(floor.gameObject);
-        foreach (Transform background in backgrounds)   Destroy(background.gameObject);
         tilePointer = 2;
         InitLevel();
+    }
+
+    public void DeleteOldTile(){
+        if(tiles.Find((tilePointer - 13).ToString()) != null) 
+        Destroy(tiles.Find((tilePointer - 13).ToString()).gameObject);
     }
 
     public Transform MakeBuilding(int tilePointer, Transform tileParent){
