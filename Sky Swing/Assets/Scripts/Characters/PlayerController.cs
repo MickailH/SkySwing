@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
+    public Slider slider;
     public Rigidbody2D rb;
     public TrajectoryController trajectory;
     public SpringJoint2D joint;
@@ -16,13 +18,12 @@ public class PlayerController : MonoBehaviour
     public bool retracting;
     public float retractionSpeed;
     public bool boosting;
-    public float boostAccel;
     public float boostAmount;
     public float boostUseRate;
+    public float boostAccel;
     public SwingState state; 
     void Start()
     {
-        // rb = GetComponent<Rigidbody2D>();
         trajectory = GetComponent<TrajectoryController>();
     }
 
@@ -67,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
 
         if(Input.GetMouseButton(1) && boostAmount > 0){
-            boostAmount -= boostUseRate * Time.deltaTime;
+            ChangeBoost(-boostUseRate * Time.deltaTime);
             boosting = true;
         }
         else boosting = false;
@@ -82,6 +83,7 @@ public class PlayerController : MonoBehaviour
 
     public void ChangeBoost(float boostChange){
         boostAmount = Mathf.Clamp(boostAmount + boostChange, 0, 100);
+        slider.value = boostAmount;
     }
 
     public void Hook(){
@@ -112,6 +114,7 @@ public class PlayerController : MonoBehaviour
         DeattachHook();
         rb.velocity = Vector2.zero;
         rb.position = resetPos;
+        ChangeBoost(100-boostAmount);   
     }
 
     public Vector2 getMousePos()

@@ -138,6 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b0fc2cba0897248b9567b0f4c338b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slider: {fileID: 0}
   rb: {fileID: 2833758502469575479}
   trajectory: {fileID: 5906124500710234948}
   joint: {fileID: 271808763}
@@ -145,9 +146,9 @@ MonoBehaviour:
   retracting: 0
   retractionSpeed: 10
   boosting: 0
-  boostAccel: 10
   boostAmount: 100
-  boostUseRate: 10
+  boostUseRate: 20
+  boostAccel: 10
   state: 0
 --- !u!120 &3021943727317739003
 LineRenderer:
