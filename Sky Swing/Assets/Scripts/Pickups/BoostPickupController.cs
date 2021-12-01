@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoostPickupController : MonoBehaviour
 {
-    public float boostAmount;
+    public float energyAmount;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -16,7 +16,7 @@ public class BoostPickupController : MonoBehaviour
 
     public void Pickup(PlayerController playerCol)
     {
-        playerCol.GetComponent<PlayerController>().ChangeBoost(boostAmount);
+        playerCol.GetComponent<PlayerController>().ChangeEnergy(energyAmount);
         Destroy(gameObject);
 
     }

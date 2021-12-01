@@ -143,12 +143,13 @@ MonoBehaviour:
   trajectory: {fileID: 5906124500710234948}
   joint: {fileID: 271808763}
   grappleLine: {fileID: 8974186289906233384}
+  energyAmount: 100
   retracting: 0
   retractionSpeed: 10
+  retractUseRate: 2
   boosting: 0
-  boostAmount: 100
-  boostUseRate: 20
   boostAccel: 10
+  boostUseRate: 20
   state: 0
 --- !u!120 &3021943727317739003
 LineRenderer:

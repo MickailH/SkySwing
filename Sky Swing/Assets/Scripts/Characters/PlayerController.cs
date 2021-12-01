@@ -15,12 +15,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 hookPos;
     private Vector2 hookDir;
     private float hookThrowDist;
+    public float energyAmount;
     public bool retracting;
     public float retractionSpeed;
+    public float retractUseRate;
     public bool boosting;
-    public float boostAmount;
-    public float boostUseRate;
     public float boostAccel;
+    public float boostUseRate;
+
     public SwingState state; 
     void Start()
     {
@@ -53,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
             case SwingState.Swinging:
                 grappleLine.SetPosition(0, rb.position);
-                if(Input.GetMouseButtonDown(0)) retracting = true;
+                if(Input.GetMouseButtonDown(0) && energyAmount > 0) retracting = true;
 
                 if(Input.GetMouseButtonUp(0)){
                     state = SwingState.Flying;
@@ -66,24 +68,31 @@ public class PlayerController : MonoBehaviour
             break;
         }
 
-
-        if(Input.GetMouseButton(1) && boostAmount > 0){
-            ChangeBoost(-boostUseRate * Time.deltaTime);
-            boosting = true;
-        }
-        else boosting = false;
-        
-
-        if(retracting) joint.distance -= retractionSpeed * Time.deltaTime;
+        if(retracting) Retract();
+        if(Input.GetMouseButton(1)) TryBoosting();  boosting = false;
     }
 
     void FixedUpdate(){
         if(boosting) rb.velocity += rb.velocity.normalized * boostAccel * Time.deltaTime;
     }
 
-    public void ChangeBoost(float boostChange){
-        boostAmount = Mathf.Clamp(boostAmount + boostChange, 0, 100);
-        slider.value = boostAmount;
+    public void TryBoosting(){
+        if (energyAmount > 0){
+            ChangeEnergy(-boostUseRate * Time.deltaTime);
+            boosting = true;
+        }
+    }
+
+    public void Retract(){
+        if (energyAmount > 0){
+            ChangeEnergy(-retractUseRate * Time.deltaTime);
+            joint.distance -= retractionSpeed * Time.deltaTime;
+        }
+    }
+
+    public void ChangeEnergy(float boostChange){
+        energyAmount = Mathf.Clamp(energyAmount + boostChange, 0, 100);
+        slider.value = energyAmount;
     }
 
     public void Hook(){
@@ -114,7 +123,7 @@ public class PlayerController : MonoBehaviour
         DeattachHook();
         rb.velocity = Vector2.zero;
         rb.position = resetPos;
-        ChangeBoost(100-boostAmount);   
+        ChangeEnergy(100-energyAmount);   
     }
 
     public Vector2 getMousePos()
