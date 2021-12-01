@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if(retracting) Retract();
-        if(Input.GetMouseButton(1)) TryBoosting();  boosting = false;
+        if(Input.GetMouseButton(1)) TryBoosting();  else boosting = false;
     }
 
     void FixedUpdate(){
@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
         slider.value = energyAmount;
     }
 
-    public void Hook(){
+    public Vector2 HookPosFromMousePos(Vector2 mousePos){
         RaycastHit2D hit = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist);
         if(hit){
             state = SwingState.Grappling;
@@ -103,6 +103,8 @@ public class PlayerController : MonoBehaviour
             grappleLine.enabled = true;
             grappleLine.SetPosition(1, hookPos);
         }
+
+        return Vector2.zero;
     }
 
     public void AttachHook(Vector2 globalPos){
