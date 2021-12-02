@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void ShiftLevel(){
+        print("GM: shift level");
         Vector3 shiftAmount = Vector3.right * 50f;
         spawnLine.position += shiftAmount;
         wall.position += shiftAmount;
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void ResetLevel(){
+        print("GM: Reset Level");
         CameraConfiner.position = ConfinerSpawn.position;
         tileManager.ResetTiles();
         playerRB.GetComponent<PlayerController>().ResetPlayer(playerSpawnLocation.position);

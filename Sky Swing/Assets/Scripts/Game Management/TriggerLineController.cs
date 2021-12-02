@@ -6,7 +6,7 @@ public class TriggerLineController : MonoBehaviour
 {
     public GameManager gm;
     void OnTriggerEnter2D(Collider2D other){
-        print("LEVEL shift level");
+        // print("LEVEL shift level");
         if(other.CompareTag("Player")){
             gm.ShiftLevel();
         }
