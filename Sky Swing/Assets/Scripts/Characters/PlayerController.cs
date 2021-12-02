@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UI;
 using UnityEngine;
 
@@ -38,11 +39,7 @@ public class PlayerController : MonoBehaviour
         {
             case SwingState.Flying:
                 if(Input.GetMouseButtonDown(0)){
-                    // hookDir = (getMousePos()-rb.position).normalized;
-                    // Hook();
-                    hookPos = getMousePos();
-                    AttachHook(hookPos);
-                    state = SwingState.Grappling;
+                    HookPosFromMousePos();
                 }     
             break;
 
@@ -95,16 +92,28 @@ public class PlayerController : MonoBehaviour
         slider.value = energyAmount;
     }
 
-    public Vector2 HookPosFromMousePos(Vector2 mousePos){
-        RaycastHit2D hit = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist);
-        if(hit){
-            state = SwingState.Grappling;
-            hookPos = Physics2D.Linecast(rb.position, rb.position + hookDir * hookThrowDist).point;
-            grappleLine.enabled = true;
-            grappleLine.SetPosition(1, hookPos);
-        }
+    public void TempHook(){
+        hookPos = getMousePos();
+        AttachHook(hookPos);
+        state = SwingState.Grappling;
+    }
 
-        return Vector2.zero;
+    public void HookPosFromMousePos(){
+        //max dist is that player can be from another point on screen is 210
+        //I want it to get the closest point to the mousepos along mouse Dir Vector that is on a building collider
+        Vector2 mousepos = getMousePos();
+        Vector2 mouse2player = rb.position - mousepos;
+
+        List<RaycastHit2D> castResults = new List<RaycastHit2D>();
+        castResults.Add(Physics2D.Raycast(mousepos, mouse2player, mouse2player.magnitude, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
+        castResults.Add(Physics2D.Raycast(mousepos, -mouse2player, 300f, LayerMask.GetMask("Brick")));
+        
+        var possibleCastResults =  castResults.Where(cast => cast.collider != null);
+        if(possibleCastResults.Count() > 0){
+            hookPos = possibleCastResults.OrderBy(cast => cast.distance).First().point;
+            AttachHook(hookPos);
+            state = SwingState.Grappling;
+        }
     }
 
     public void AttachHook(Vector2 globalPos){

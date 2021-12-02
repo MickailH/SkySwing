@@ -324,7 +324,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5080311153325949710, guid: 601c9b19419e71240965e9ccb0022ced, type: 3}
       propertyPath: m_Name
-      value: Floor (1)
+      value: Floor
       objectReference: {fileID: 0}
     - target: {fileID: 5080311153325949808, guid: 601c9b19419e71240965e9ccb0022ced, type: 3}
       propertyPath: m_RootOrder
@@ -700,7 +700,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6416671206786275324, guid: 109698712457922418a1dd9516fe4798, type: 3}
       propertyPath: m_Name
-      value: BrickBlock (1)
+      value: BrickBlock
       objectReference: {fileID: 0}
     - target: {fileID: 9135834313327020774, guid: 109698712457922418a1dd9516fe4798, type: 3}
       propertyPath: m_RootOrder
@@ -1173,7 +1173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5196435371258248293, guid: 1d131a0050e89b7408360a81434cb233, type: 3}
       propertyPath: m_Name
-      value: Background (1)
+      value: Background
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d131a0050e89b7408360a81434cb233, type: 3}
