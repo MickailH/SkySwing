@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
 
     public LineRenderer grappleLine;
     private Vector2 hookPos;
-    private Vector2 hookDir;
-    private float hookThrowDist;
     public float energyAmount;
     public bool retracting;
     public float retractionSpeed;
@@ -39,15 +37,16 @@ public class PlayerController : MonoBehaviour
         {
             case SwingState.Flying:
                 if(Input.GetMouseButtonDown(0)){
-                    HookPosFromMousePos();
+                    if(HookPosFromMousePos(getMousePos())){
+                        AttachHook(hookPos);
+                        state = SwingState.Grappling;
+                    }
                 }     
             break;
 
             case SwingState.Grappling:
                 grappleLine.SetPosition(0, rb.position);   
-                if(Input.GetMouseButtonUp(0)){
-                    state = SwingState.Swinging;
-                }
+                if(Input.GetMouseButtonUp(0))   state = SwingState.Swinging;
             break;
 
             case SwingState.Swinging:
@@ -73,61 +72,9 @@ public class PlayerController : MonoBehaviour
         if(boosting) rb.velocity += rb.velocity.normalized * boostAccel * Time.deltaTime;
     }
 
-    public void TryBoosting(){
-        if (energyAmount > 0){
-            ChangeEnergy(-boostUseRate * Time.deltaTime);
-            boosting = true;
-        }
-    }
-
-    public void Retract(){
-        if (energyAmount > 0){
-            ChangeEnergy(-retractUseRate * Time.deltaTime);
-            joint.distance -= retractionSpeed * Time.deltaTime;
-        }
-    }
-
     public void ChangeEnergy(float boostChange){
         energyAmount = Mathf.Clamp(energyAmount + boostChange, 0, 100);
         slider.value = energyAmount;
-    }
-
-    public void TempHook(){
-        hookPos = getMousePos();
-        AttachHook(hookPos);
-        state = SwingState.Grappling;
-    }
-
-    public void HookPosFromMousePos(){
-        //max dist is that player can be from another point on screen is 210
-        //I want it to get the closest point to the mousepos along mouse Dir Vector that is on a building collider
-        Vector2 mousepos = getMousePos();
-        Vector2 mouse2player = rb.position - mousepos;
-
-        List<RaycastHit2D> castResults = new List<RaycastHit2D>();
-        castResults.Add(Physics2D.Raycast(mousepos, mouse2player, mouse2player.magnitude, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
-        castResults.Add(Physics2D.Raycast(mousepos, -mouse2player, 300f, LayerMask.GetMask("Brick")));
-        
-        var possibleCastResults =  castResults.Where(cast => cast.collider != null);
-        if(possibleCastResults.Count() > 0){
-            hookPos = possibleCastResults.OrderBy(cast => cast.distance).First().point;
-            AttachHook(hookPos);
-            state = SwingState.Grappling;
-        }
-    }
-
-    public void AttachHook(Vector2 globalPos){
-        joint.connectedAnchor = globalPos;
-        joint.enabled = true;
-
-        grappleLine.SetPosition(0, rb.position);
-        grappleLine.SetPosition(1, globalPos);
-        grappleLine.enabled = true;
-    }
-
-    public void DeattachHook(){
-        joint.enabled = false;
-        grappleLine.enabled = false;
     }
 
     public void ResetPlayer(Vector2 resetPos){
@@ -137,7 +84,58 @@ public class PlayerController : MonoBehaviour
         ChangeEnergy(100-energyAmount);   
     }
 
-    public Vector2 getMousePos()
+    private void TryBoosting(){
+        if (energyAmount > 0){
+            ChangeEnergy(-boostUseRate * Time.deltaTime);
+            boosting = true;
+        }
+    }
+
+    private void Retract(){
+        if (energyAmount > 0){
+            ChangeEnergy(-retractUseRate * Time.deltaTime);
+            joint.distance -= retractionSpeed * Time.deltaTime;
+        }
+    }
+
+    private bool HookPosFromMousePos(Vector2 mousepos){
+        //max dist in 16:9 is 178:100, max diagonal dist 204
+        //player will almost always be in centre of the screen, max dist from 89:100 is 134
+        //I want it to get the closest point to the mousepos along mouse Dir Vector that is on a building collider
+        Vector2 mouse2player = rb.position - mousepos;
+
+        List<RaycastHit2D> castResults = new List<RaycastHit2D>();
+        castResults.Add(Physics2D.Raycast(mousepos, mouse2player, mouse2player.magnitude, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
+        castResults.Add(Physics2D.Raycast(mousepos, -mouse2player, 204f, LayerMask.GetMask("Brick")));
+        
+        var possibleCastResults =  castResults.Where(cast => cast.collider != null);
+        if(possibleCastResults.Count() > 0){
+            hookPos = possibleCastResults.OrderBy(cast => cast.distance).First().point;
+            return true;
+        }
+        return false;
+    }
+
+    // private bool TempHook(Vector2 mousepos){
+    //     hookPos = mousepos;
+    //     return true;
+    // }
+
+    private void AttachHook(Vector2 globalPos){
+        joint.connectedAnchor = globalPos;
+        joint.enabled = true;
+
+        grappleLine.SetPosition(0, rb.position);
+        grappleLine.SetPosition(1, globalPos);
+        grappleLine.enabled = true;
+    }
+
+    private void DeattachHook(){
+        joint.enabled = false;
+        grappleLine.enabled = false;
+    }
+
+    private Vector2 getMousePos()
     {
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = Camera.main.nearClipPlane;
