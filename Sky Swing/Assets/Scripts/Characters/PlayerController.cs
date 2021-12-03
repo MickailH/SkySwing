@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
         List<RaycastHit2D> castResults = new List<RaycastHit2D>();
         // castResults.Add(Physics2D.Raycast(mousepos, mouse2player, mouse2player.magnitude, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
         castResults.Add(Physics2D.Linecast(mousepos, rb.position, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
-        castResults.Add(Physics2D.Raycast(mousepos, player2mouse, 130f, LayerMask.GetMask("Brick")));
+        castResults.Add(Physics2D.Raycast(mousepos, player2mouse, 130f - player2mouse.magnitude , LayerMask.GetMask("Brick")));
         
         var possibleCastResults =  castResults.Where(cast => cast.collider != null);
         if(possibleCastResults.Count() > 0){
