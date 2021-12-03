@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
+    public ParticleSystem partSys;
     public Slider slider;
     public Rigidbody2D rb;
     public TrajectoryController trajectory;
@@ -66,16 +67,14 @@ public class PlayerController : MonoBehaviour
 
         if(retracting) Retract();
         if(Input.GetMouseButtonDown(1)) boosting = true;
-        if(Input.GetMouseButtonUp(1))   boosting = false;
+        if(Input.GetMouseButtonUp(1)){
+            boosting = false;
+            BoostPartOff();
+        }
     }
 
     void FixedUpdate(){
         if(boosting)  Boost();
-    }
-
-    public void ChangeEnergy(float boostChange){
-        energyAmount = Mathf.Clamp(energyAmount + boostChange, 0, 100);
-        slider.value = energyAmount;
     }
 
     public void ResetPlayer(Vector2 resetPos){
@@ -83,6 +82,11 @@ public class PlayerController : MonoBehaviour
         rb.velocity = Vector2.zero;
         rb.position = resetPos;
         ChangeEnergy(100-energyAmount);   
+    }
+
+    public void ChangeEnergy(float boostChange){
+        energyAmount = Mathf.Clamp(energyAmount + boostChange, 0, 100);
+        slider.value = energyAmount;
     }
 
     private void Retract(){
@@ -96,9 +100,20 @@ public class PlayerController : MonoBehaviour
         if (energyAmount > 0){
             ChangeEnergy(-boostUseRate * Time.deltaTime);
             rb.velocity += rb.velocity.normalized * boostAccel * Time.deltaTime;
+            BoostPartOn();
         }
+        else BoostPartOff();
     }
 
+    private void BoostPartOn(){
+        // var emission = partSys.emission; // Stores the module in a local variable
+        // emission.enabled = true; // Applies the new value directly to the Particle System
+        partSys.Play();
+    }
+
+    private void BoostPartOff(){
+        partSys.Pause();
+    }
 
 
     private bool HookPosFromMousePos(Vector2 mousepos){
