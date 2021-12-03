@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
             case SwingState.Swinging:
                 grappleLine.SetPosition(0, rb.position);
-                if(Input.GetMouseButtonDown(0) && energyAmount > 0) retracting = true;
+                if(Input.GetMouseButtonDown(0)) retracting = true;
 
                 if(Input.GetMouseButtonUp(0)){
                     state = SwingState.Flying;
@@ -65,11 +65,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if(retracting) Retract();
-        if(Input.GetMouseButton(1)) TryBoosting();  else boosting = false;
+        if(Input.GetMouseButtonDown(1)) boosting = true;
+        if(Input.GetMouseButtonUp(1))   boosting = false;
     }
 
     void FixedUpdate(){
-        if(boosting) rb.velocity += rb.velocity.normalized * boostAccel * Time.deltaTime;
+        if(boosting)  Boost();
     }
 
     public void ChangeEnergy(float boostChange){
@@ -84,13 +85,6 @@ public class PlayerController : MonoBehaviour
         ChangeEnergy(100-energyAmount);   
     }
 
-    private void TryBoosting(){
-        if (energyAmount > 0){
-            ChangeEnergy(-boostUseRate * Time.deltaTime);
-            boosting = true;
-        }
-    }
-
     private void Retract(){
         if (energyAmount > 0){
             ChangeEnergy(-retractUseRate * Time.deltaTime);
@@ -98,15 +92,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Boost(){
+        if (energyAmount > 0){
+            ChangeEnergy(-boostUseRate * Time.deltaTime);
+            rb.velocity += rb.velocity.normalized * boostAccel * Time.deltaTime;
+        }
+    }
+
+
+
     private bool HookPosFromMousePos(Vector2 mousepos){
         //max dist in 16:9 is 178:100, max diagonal dist 204
         //player will almost always be in centre of the screen, max dist from 89:100 is 134
         //I want it to get the closest point to the mousepos along mouse Dir Vector that is on a building collider
-        Vector2 mouse2player = rb.position - mousepos;
+        Vector2 player2mouse = mousepos - rb.position;
 
         List<RaycastHit2D> castResults = new List<RaycastHit2D>();
-        castResults.Add(Physics2D.Raycast(mousepos, mouse2player, mouse2player.magnitude, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
-        castResults.Add(Physics2D.Raycast(mousepos, -mouse2player, 204f, LayerMask.GetMask("Brick")));
+        // castResults.Add(Physics2D.Raycast(mousepos, mouse2player, mouse2player.magnitude, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
+        castResults.Add(Physics2D.Linecast(mousepos, rb.position, LayerMask.GetMask("Brick")));// distance limited to not go behind the player
+        castResults.Add(Physics2D.Raycast(mousepos, player2mouse, 130f, LayerMask.GetMask("Brick")));
         
         var possibleCastResults =  castResults.Where(cast => cast.collider != null);
         if(possibleCastResults.Count() > 0){
