@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         trajectory = GetComponent<TrajectoryController>();
+        BoostPartOff();
     }
 
     // Update is called once per frame
@@ -114,7 +115,6 @@ public class PlayerController : MonoBehaviour
     private void BoostPartOff(){
         partSys.Pause();
     }
-
 
     private bool HookPosFromMousePos(Vector2 mousepos){
         //max dist in 16:9 is 178:100, max diagonal dist 204

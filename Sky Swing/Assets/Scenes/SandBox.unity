@@ -626,7 +626,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 63.92624, y: -0.000038146973, z: -10}
+  m_LocalPosition: {x: 63.888947, y: -0.000038146973, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1010,6 +1010,11 @@ Transform:
   m_Father: {fileID: 747092649}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!198 &873844104 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 9184637398136625193, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
+  m_PrefabInstance: {fileID: 5133500228091173687}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &959079002
 GameObject:
   m_ObjectHideFlags: 0
@@ -2031,10 +2036,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5184123380656539860, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8726518649929690760, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
       propertyPath: slider
       value: 
       objectReference: {fileID: 1154852440}
+    - target: {fileID: 8726518649929690760, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
+      propertyPath: partSys
+      value: 
+      objectReference: {fileID: 873844104}
     - target: {fileID: 8974186289906233384, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
       propertyPath: m_Parameters.colorGradient.ctime1
       value: 65535
@@ -2082,6 +2095,14 @@ PrefabInstance:
     - target: {fileID: 8974186289906233384, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
       propertyPath: m_Parameters.colorGradient.m_NumColorKeys
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184637398136625193, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184637398136625193, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5daeabfac0d3ab9448ace1cc108d98c9, type: 3}
